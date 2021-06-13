@@ -134,7 +134,7 @@ try:
     for i in elems:
         crnt_list.append((i.get_attribute('href')))
     
-    #does not work for dynamic web pages 
+    #does not work
     elems = driver.find_elements_by_class_name("yuRUbf")
     for i in elems:
         print(i.get_attribute('href'))
