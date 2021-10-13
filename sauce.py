@@ -6,6 +6,7 @@ This module opens new chrome window for image search and retuns result to file
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import requests
 import os
 import time
 
@@ -72,7 +73,26 @@ def wiki_that(search_term):
 
 
 
+def duckduckgo(search_for):
+    
+    
+    response = requests.get(f'http://api.duckduckgo.com/?q={search_for}&format=json')
+    response = response.json()
 
+#    print('\n')
+    print('Heading:',response['Heading'])
+    print('Abstract:',response['Abstract'])
+    print('Abstract source:',response['AbstractSource'])
+    print('Abstract text:',response['AbstractText'])
+    print('Definition:',response['Definition'])
+
+    print('Related Topic:')
+    related_no = 2
+    for i in response['RelatedTopics']:
+        if related_no <= 0:
+            break
+        print(i['Text'])
+        related_no-=1
 
 
 

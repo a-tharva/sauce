@@ -7,13 +7,13 @@ import sauce
 
 def main():
 
-    print('\n\n  welcome to sauce')
-    print('\n What do you want to search')
+    print('\n\n                 welcome to sauce')
+    print('\n              What do you want to search')
     
     while True:
         try:
             
-            print("--Image  \n--Wiki \n--Company")
+            print("\n--Image  \n--Wiki \n--Company \n--Duck   Go DuckDuckGo it")
             choice = input('>').lower()
             
             if choice == 'image':
@@ -39,7 +39,14 @@ def main():
                     wiki = wiki + ' company'
                 sauce.wiki_that(wiki)
             
+            elif choice == 'duck':
+                
+                search_for = input('>>Search for: ')
+                sauce.duckduckgo(search_for)
+                
+            
         except KeyboardInterrupt:
+            print('\nExit..')
             break
     
 if __name__ == '__main__':
