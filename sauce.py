@@ -1,71 +1,79 @@
-"""Web search with selenium
+"""Main function for sauce
 
-This module opens new chrome window for image search and retuns result to file
+menu for sauce 
 """
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import requests
-import os
-import time
+import argparse
+import search_functions as search
 
 
-inc = webdriver.ChromeOptions()
-inc.add_argument("--incognito")
-
-def search_that(url, filename):
-    """To search url image
+def main():
+    parser = argparse.ArgumentParser(description='Get answer for your question')
+    parser.add_argument('function',
+                        nargs='?',
+                        choices=['answer', 'image', 'wiki'],
+                        help='answer for duckduckgo quick answer, image for google image search, wiki for wikipedia search'
+                       )
+    args = parser.parse_args()
     
-    Keywords:
-    url -- image url for google images
-    filename -- to create file and store search results
-    """
-    try:
-        f = open(filename,'w')
-        #location of chrome driver
-        driver = webdriver.Chrome(r"C:\Program Files (x86)\chromedriver.exe", options= inc)
-        driver.implicitly_wait(0.5)
-        #open google image search
-        driver.get('https://images.google.com/')
-        #find cam button
-        cam_button = driver.find_elements_by_xpath("//div[@aria-label=\"Search by image\" and @role=\"button\"]")[0]
-        cam_button.click()
-        #input url 
-        paste_url = driver.find_element_by_xpath("/html/body/div[2]/div[2]/div[2]/div/div[2]/form/div[1]/table/tbody/tr/td[1]/input")
-        paste_url.send_keys(url)
-        #click search button
-        img_searc = driver.find_element_by_xpath("/html/body/div[2]/div[2]/div[2]/div/div[2]/form/div[1]/table/tbody/tr/td[2]/input")
-        img_searc.click()
-        time.sleep(2) #just in case
-        #return websites result
-        elems = driver.find_elements_by_class_name('yuRUbf')
-        for i in elems:
-            a = i.find_elements_by_tag_name("a")
-            for _ in a:
-                n = _.get_attribute('href')
-                f.write(n+"\n\n")
-                print(n)
-    except Exception as e:
-        print(error)
-
-def wiki(search_term):
-    import wikipedia
+    function = args.function
     
-    wikipage = wikipedia.summary(search_term, sentences=50)
-    print(f'{wikipage}\n\n')
+    # If there are no arguments passed
+    if function is None:
+        print('Choose search option')
+    # For answer choice
+    elif function == 'answer':
+        search_for = input('>>Search for: ')
+        search.duckduckgo(search_for)
+    # For image choice
+    elif function == 'image':
+        # Img address
+        url = input(">>Input the url for img search:")  
+        # Search result will be stored in txt file
+        filename = input(">>Name the file:")            
+        search.search_that(url, filename)
+    # For wiki choice
+    elif function == 'wiki':
+        wiki_search = input('>>Input wiki search tearm:')
+        search.wiki(wiki_search)
+    
+if __name__ == '__main__':
+    main()
+    
+    
+    
+    
 
-def duckduckgo(search_for):
-    response = requests.get(f'http://api.duckduckgo.com/?q={search_for}&format=json')
-    response = response.json()
-    #print('\n')
-    print('Heading:',response['Heading'])
-    print('Abstract:',response['Abstract'])
-    print('Abstract source:',response['AbstractSource'])
-    print('Abstract text:',response['AbstractText'])
-    print('Definition:',response['Definition'])
-    related_no = 2
-    print('Related Topic:')
-    for i in response['RelatedTopics']:
-        if related_no <= 0:
+    
+    
+    
+    
+    
+# Old main function
+'''
+def main():
+    print('\n\n                 welcome to sauce')
+    print('\n              What do you want to search')
+    while True:
+        try:
+            print("\n--Image  \n--Wiki \n--Company \n--Duck   Go DuckDuckGo it")
+            choice = input('>').lower()
+            if choice == 'image':
+                url = input(">>Input the url for img search:")  #img address
+                filename = input(">>Name the file:")            #search result will be stored in txt file
+                sauce.search_that(url, filename)    
+            elif choice == 'wiki':
+                wiki_search = input('>>Input wiki search tearm:')
+                sauce.wiki(wiki_search)
+            elif choice == 'company':
+                wiki_search = input('>>Input wiki company to search:')
+                if 'company' not in wiki_search:
+                    wiki_search = wiki_search + ' company'
+                sauce.wiki(wiki_search)
+            elif choice == 'duck':
+                search_for = input('>>Search for: ')
+                sauce.duckduckgo(search_for)
+        # Keyboard interrupt ctrl+c        
+        except KeyboardInterrupt:
+            print('\nExit..')
             break
-        print(i['Text'])
-        related_no-=1
+'''
